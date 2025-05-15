@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Quantum Key Distribution")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+18195fe41cd193a3756499e4058fa5619e32f330")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+506f0cb5d4792f2f70c951cb2f3bcdca1794bb87")]
 [assembly: System.Reflection.AssemblyProductAttribute("Quantum Key Distribution")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Quantum Key Distribution")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -1,44 +1,42 @@
 public class Universe{
     static void Main(string[] args){
-        EntangledPair[] particleArray = GetEntangledArray(15);
+        int amountOfParticles = 24;
+        EntangledPair[] particleArray = GetEntangledArray(amountOfParticles);
+        Axis[] axes = GetRandomAxes(amountOfParticles);
 
-        SimulateNormalConversation(particleArray);
-        SimulateInterceptedConversation(particleArray);
+        SimulateNormalConversation(particleArray, axes);
+        SimulateInterceptedConversation(particleArray, axes);
     }
 
-    public static void SimulateNormalConversation(EntangledPair[] particles){
+    public static void SimulateNormalConversation(EntangledPair[] particles, Axis[] axes){
         EntangledPair[] particlesCopy = particles;
         Console.WriteLine("-----------------------------------Expected Outcome-----------------------------------");
-        Axis[] axesMeasured;
         // Step 1: Alice measures particles in random directions and stores the measurements
-        AliceMeasurements(ref particlesCopy, out axesMeasured);
+        AliceMeasurements(ref particlesCopy, axes);
 
         // Step 2: Bob measures particles in those directions and stores the measurements
-        BobMeasurements(ref particlesCopy, axesMeasured);
+        BobMeasurements(ref particlesCopy, axes);
     }
 
-    public static void SimulateInterceptedConversation(EntangledPair[] particles){
+    public static void SimulateInterceptedConversation(EntangledPair[] particles, Axis[] axes){
         EntangledPair[] particlesCopy = particles;
         Console.WriteLine("-----------------------------------Simulated Outcome-----------------------------------");
         // Step 1: Alice measures particles in random directions and stores the measurements
-        Axis[] axesMeasured;
-        AliceMeasurements(ref particlesCopy, out axesMeasured);
+        AliceMeasurements(ref particlesCopy, axes);
 
         // Step 2: Eve intercepts the message and has to randomly choose a direction to measure spin
         EveMeasurements(ref particlesCopy);
 
         // Step 3: Bob gets the particles and measures them in the basis Alice provides
-        BobMeasurements(ref particlesCopy, axesMeasured);
+        BobMeasurements(ref particlesCopy, axes);
     }
 
-    private static Spin[] AliceMeasurements(ref EntangledPair[] particles, out Axis[] axesMeasured){
+    private static Spin[] AliceMeasurements(ref EntangledPair[] particles, Axis[] axesMeasured){
         string axisOutput = "";
         string output = "";
         Spin[] AliceMeasurements = new Spin[particles.Length];
-        axesMeasured = new Axis[particles.Length];
         for (int index = 0; index < particles.Length; index++){
             EntangledPair pair = particles[index];
-            axesMeasured[index] = GetRandomAxis();
             pair.MeasureSpin(axesMeasured[index], "p1");
             AliceMeasurements[index] = pair.p1.spin;
             axisOutput += GetEnumString(axesMeasured[index]) + "  ";
@@ -54,7 +52,7 @@ public class Universe{
     private static Spin[] EveMeasurements(ref EntangledPair[] particles){
         string axisOutput = "";
         string output = "";
-        Axis measuredAxis = GetRandomAxis();
+        Axis measuredAxis = GetRandomAxes(1)[0];
         Spin[] EveMeasurements = new Spin[particles.Length];
         for (int index = 0; index < particles.Length; index++){
             EntangledPair pair = particles[index];
@@ -105,8 +103,12 @@ public class Universe{
     }
 
     // Returns a random axis
-    private static Axis GetRandomAxis(){
-        Random random = new Random();
-        return (Axis)(random.NextInt64() % 3);
+    private static Axis[] GetRandomAxes(int amount){
+        Axis[] axes = new Axis[amount];
+        for (int index = 0; index < amount; index++){
+            Random random = new Random();
+            axes[index] = (Axis)(random.NextInt64() % 3);
+        }
+        return axes;
     }
 }
