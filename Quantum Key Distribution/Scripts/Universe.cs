@@ -1,34 +1,61 @@
 public class Universe{
     static void Main(string[] args){
+        // Includes a check on the expected value that 
+        string verification = "";
+        string key = "";
+        string message = verification + key;
         int amountOfParticles = 24;
         EntangledPair[] particleArray = GetEntangledArray(amountOfParticles);
         Axis[] axes = GetRandomAxes(amountOfParticles);
 
-        SimulateNormalConversation(particleArray, axes);
-        SimulateInterceptedConversation(particleArray, axes);
+        SimulateNormalConversation(particleArray, axes, message);
+        SimulateInterceptedConversation(particleArray, axes, message);
     }
 
-    public static void SimulateNormalConversation(EntangledPair[] particles, Axis[] axes){
+    private static void SimulateNormalConversation(EntangledPair[] particles, Axis[] axes, string unencondedMessage){
         EntangledPair[] particlesCopy = particles;
         Console.WriteLine("-----------------------------------Expected Outcome-----------------------------------");
         // Step 1: Alice measures particles in random directions and stores the measurements
         AliceMeasurements(ref particlesCopy, axes);
 
-        // Step 2: Bob measures particles in those directions and stores the measurements
+        // Step 2: Alice creates a message based on her particles
+        string encodedMessage = EncodeMessage(unencondedMessage, particlesCopy);
+
+        // Step 3: Bob measures particles in those directions and stores the measurements
         BobMeasurements(ref particlesCopy, axes);
+
+        // Step 4: Bob gets the particles and measures them in the basis Alice provides
+        DecodeMessage(encodedMessage, particlesCopy);
     }
 
-    public static void SimulateInterceptedConversation(EntangledPair[] particles, Axis[] axes){
+    private static void SimulateInterceptedConversation(EntangledPair[] particles, Axis[] axes, string unencondedMessage){
         EntangledPair[] particlesCopy = particles;
         Console.WriteLine("-----------------------------------Simulated Outcome-----------------------------------");
         // Step 1: Alice measures particles in random directions and stores the measurements
         AliceMeasurements(ref particlesCopy, axes);
 
-        // Step 2: Eve intercepts the message and has to randomly choose a direction to measure spin
+        // Step 2: Alice creates a message based on her particles
+        string encodedMessage = EncodeMessage(unencondedMessage, particlesCopy);
+
+        // Step 3: Eve intercepts the message and has to randomly choose a direction to measure spin
         EveMeasurements(ref particlesCopy);
 
-        // Step 3: Bob gets the particles and measures them in the basis Alice provides
+        // Step 4: Eve attempts to decode the message
+        DecodeMessage(encodedMessage, particlesCopy);
+
+        // Step 5: Bob gets the particles and measures them in the basis Alice provides
         BobMeasurements(ref particlesCopy, axes);
+
+        // Step 6: Bob attempts to decode the message
+        DecodeMessage(encodedMessage, particlesCopy);
+    }
+
+    private static string EncodeMessage(string message, EntangledPair[] particles){
+        return "";
+    }
+
+    private static void DecodeMessage(string message, EntangledPair[] particles){
+
     }
 
     private static Spin[] AliceMeasurements(ref EntangledPair[] particles, Axis[] axesMeasured){
