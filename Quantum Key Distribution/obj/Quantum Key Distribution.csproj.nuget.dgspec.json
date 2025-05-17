@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\bye33353\\Desktop\\Modern Physics Project\\Quantum Key Distribution\\Quantum Key Distribution.csproj": {}
+    "C:\\Users\\bye33\\Desktop\\Modern Physics Project\\Quantum Key Distribution\\Quantum Key Distribution.csproj": {}
   },
   "projects": {
-    "C:\\Users\\bye33353\\Desktop\\Modern Physics Project\\Quantum Key Distribution\\Quantum Key Distribution.csproj": {
+    "C:\\Users\\bye33\\Desktop\\Modern Physics Project\\Quantum Key Distribution\\Quantum Key Distribution.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\bye33353\\Desktop\\Modern Physics Project\\Quantum Key Distribution\\Quantum Key Distribution.csproj",
+        "projectUniqueName": "C:\\Users\\bye33\\Desktop\\Modern Physics Project\\Quantum Key Distribution\\Quantum Key Distribution.csproj",
         "projectName": "Quantum Key Distribution",
-        "projectPath": "C:\\Users\\bye33353\\Desktop\\Modern Physics Project\\Quantum Key Distribution\\Quantum Key Distribution.csproj",
-        "packagesPath": "C:\\Users\\bye33353\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\bye33353\\Desktop\\Modern Physics Project\\Quantum Key Distribution\\obj\\",
+        "projectPath": "C:\\Users\\bye33\\Desktop\\Modern Physics Project\\Quantum Key Distribution\\Quantum Key Distribution.csproj",
+        "packagesPath": "C:\\Users\\bye33\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\bye33\\Desktop\\Modern Physics Project\\Quantum Key Distribution\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\bye33353\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\bye33\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"

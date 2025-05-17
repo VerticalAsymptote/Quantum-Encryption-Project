@@ -1,22 +1,24 @@
-public class Universe
+using System.Text.RegularExpressions;
+
+public partial class Universe
 {
+        public static int verification = 10;
+        public static string unencodedKey = "10011001110101";
+        public static int amountOfParticles = 30;
     static void Main(string[] args)
     {
         // Setup for the given experiment
-        int verification = 15;
-        string key = "10001110";
-        int amountOfParticles = 24;
         EntangledPair[] particleArray = GetEntangledArray(amountOfParticles);
         Axis[] axes = GetRandomAxes(amountOfParticles);
 
         Console.WriteLine("-----------------------------------Initial State-----------------------------------");
         Console.WriteLine("Verification Length: " + verification);
-        Console.WriteLine("Unencoded Key: " + key);
+        Console.WriteLine("Unencoded Key: " + unencodedKey);
         Console.WriteLine();
         // Step 1: Alice measures particles in random directions and stores the measurements
         AliceMeasurements(ref particleArray, axes);
         // Step 2: Alice encodes the message given the results of her measurements
-        string encodedMessage = EncodeMessage(verification, key, particleArray);
+        string encodedMessage = EncodeMessage(verification, unencodedKey, particleArray);
 
         SimulateNormalConversation(particleArray, encodedMessage);
         //SimulateInterceptedConversation(particleArray, encodedMessage);
@@ -27,8 +29,10 @@ public class Universe
         EntangledPair[] particlesCopy = particles;
         Console.WriteLine("-----------------------------------Expected Outcome-----------------------------------");
 
+        string[] seperatedMessage = DecodeMessage(encodedMessage, out int parseLength);
+
         // Step 3: Bob gets the particles and the message and attempts decryption 
-        BobMeasurements(ref particlesCopy, encodedMessage);
+        BobMeasurements(ref particlesCopy, seperatedMessage, parseLength);
     }
 
     private static void SimulateInterceptedConversation(EntangledPair[] particles, string encodedMessage)
@@ -40,13 +44,13 @@ public class Universe
         EveMeasurements(ref particlesCopy);
 
         // Step 4: Eve attempts to decode the message
-        DecodeMessage(encodedMessage, particlesCopy);
+        //DecodeMessage(encodedMessage);
+        string[] seperatedMessage = DecodeMessage(encodedMessage, out int parseLength);
 
         // Step 5: Bob gets the particles and measures them in the basis Alice provides
-        BobMeasurements(ref particlesCopy, encodedMessage);
+        BobMeasurements(ref particlesCopy, seperatedMessage, parseLength);
 
         // Step 6: Bob attempts to decode the message
-        DecodeMessage(encodedMessage, particlesCopy);
     }
 
     private static string EncodeMessage(int verification, string key, EntangledPair[] particles)
@@ -94,9 +98,19 @@ public class Universe
         return trustVerification + encodedKey;
     }
 
-    private static void DecodeMessage(string message, EntangledPair[] particles)
+    private static string[] DecodeMessage(string message, out int verificationLength)
     {
+        if (!int.TryParse(message.Split("|")[0], out verificationLength)) throw new Exception("Error!");
 
+        MatchCollection matchCollection;
+        Regex verifyParser = ParserRegex();
+        matchCollection = verifyParser.Matches(message);
+        int parseLength = matchCollection.Count;
+        string[] array = new string[parseLength];
+        for (int index = 0; index < parseLength; index++){
+            array[index] = matchCollection[index].ToString();
+        }
+        return array;
     }
 
     private static Spin[] AliceMeasurements(ref EntangledPair[] particles, Axis[] axesMeasured)
@@ -137,26 +151,55 @@ public class Universe
         return EveMeasurements;
     }
 
-    private static Spin[] BobMeasurements(ref EntangledPair[] particles, string encodedMessage)
+    private static void BobMeasurements(ref EntangledPair[] particles, string[] actions, int verificationLength)
     {
-        
+        Axis[] axisOutput = new Axis[particles.Length];
+        Spin[] spinOutput = new Spin[particles.Length];
 
+        for (int index = 0; index < particles.Length; index++){
+            axisOutput[index] = Axis.Undefined;
+            spinOutput[index] = Spin.Undefined;
+        }
 
+        bool keyCorrect = true;
+        for (int index = 0; index < verificationLength; index++){
+            Qubit pair = particles[index].p2;
+            if (!int.TryParse(actions[index][1].ToString(), out int spin)) throw new Exception("Error!");
+            Spin value = pair.MeasureSpin(GetEnumFromString(actions[index][0]));
+            axisOutput[index] = pair.axis;
+            spinOutput[index] = value;
+            keyCorrect = value == Qubit.GetOppositeSpin((Spin)spin);
+        }
 
-        //string axisOutput = "";
-        //string output = "";
-        Spin[] BobMeasurements = new Spin[particles.Length];
-        //for (int index = 0; index < particles.Length; index++)
-        //{
-        //    EntangledPair pair = particles[index];
-        //    BobMeasurements[index] = pair.p2.MeasureSpin(axesMeasured[index]);
-        //    axisOutput += GetEnumString(axesMeasured[index]) + "  ";
-        //    output += (int)BobMeasurements[index] + "  ";
-        //}
-        //Console.WriteLine("Measured Basis: " + axisOutput);
-        //Console.WriteLine("Bob Measures:   " + output);
-        //Console.WriteLine();
-        return BobMeasurements;
+        string key = "";
+        for (int index = verificationLength; index < actions.Length; index++){
+            Axis measuredAxis = GetEnumFromString(actions[index][0]);
+            if (!int.TryParse(actions[index].Substring(1), out int particleIndex)) throw new Exception("Error!");
+            Spin value = particles[particleIndex].p2.MeasureSpin(measuredAxis);
+            key += (int)Qubit.GetOppositeSpin(value);
+            axisOutput[particleIndex] = measuredAxis;
+            spinOutput[particleIndex] = value;
+        }
+
+        string stringAxisOutput = "", stringSpinOutput = "";
+        for (int index = 0; index < particles.Length; index++){
+            if (axisOutput[index] != Axis.Undefined){
+                stringAxisOutput += GetEnumString(axisOutput[index]) + "  ";
+            } else {
+                stringAxisOutput += "-  ";
+            }
+            if (spinOutput[index] != Spin.Undefined){
+                stringSpinOutput += (int)spinOutput[index] + "  ";
+            } else {
+                stringSpinOutput += "?  ";
+            }
+        }
+        Console.WriteLine("Measured Basis: " + stringAxisOutput);
+        Console.WriteLine("Bob Measures:   " + stringSpinOutput); 
+        Console.WriteLine();
+        Console.WriteLine("Is Verified: " + keyCorrect);
+        Console.WriteLine("Is Successfully Decoded: " + (key == unencodedKey));
+        Console.WriteLine("Decoded Key: " + key);
     }
 
     private static string GetEnumString(Axis axis)
@@ -166,6 +209,15 @@ public class Universe
             case Axis.Z: return "Z";
             case Axis.Y: return "Y";
             case Axis.X: return "X";
+            default: throw new Exception("Error!");
+        }
+    }
+
+    private static Axis GetEnumFromString(char s){
+        switch (s){
+            case 'X': return Axis.X;
+            case 'Y': return Axis.Y;
+            case 'Z': return Axis.Z;
             default: throw new Exception("Error!");
         }
     }
@@ -192,4 +244,7 @@ public class Universe
         }
         return axes;
     }
+
+    [GeneratedRegex("([X-Z][01])|([X-Z][0-9]*)")]
+    private static partial Regex ParserRegex();
 }

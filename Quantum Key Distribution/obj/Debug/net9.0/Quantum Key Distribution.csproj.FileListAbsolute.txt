@@ -27,3 +27,4 @@ C:\Users\bye33353\Desktop\Modern Physics Project\Quantum Key Distribution\obj\De
 C:\Users\bye33353\Desktop\Modern Physics Project\Quantum Key Distribution\obj\Debug\net9.0\Quantum Key Distribution.pdb
 C:\Users\bye33353\Desktop\Modern Physics Project\Quantum Key Distribution\obj\Debug\net9.0\Quantum Key Distribution.genruntimeconfig.cache
 C:\Users\bye33353\Desktop\Modern Physics Project\Quantum Key Distribution\obj\Debug\net9.0\ref\Quantum Key Distribution.dll
+C:\Users\bye33\Desktop\Modern Physics Project\Quantum Key Distribution\obj\Debug\net9.0\Quantum Key Distribution.sourcelink.json
