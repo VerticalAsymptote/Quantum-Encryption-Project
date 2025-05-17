@@ -4,7 +4,7 @@ public partial class Universe
 {
         public static int verification = 10;
         public static string unencodedKey = "10011001110101";
-        public static int amountOfParticles = 30;
+        public static int amountOfParticles = 50;
     static void Main(string[] args)
     {
         // Setup for the given experiment
@@ -107,7 +107,8 @@ public partial class Universe
         matchCollection = verifyParser.Matches(message);
         int parseLength = matchCollection.Count;
         string[] array = new string[parseLength];
-        for (int index = 0; index < parseLength; index++){
+        for (int index = 0; index < parseLength; index++)
+        {
             array[index] = matchCollection[index].ToString();
         }
         return array;
@@ -245,6 +246,6 @@ public partial class Universe
         return axes;
     }
 
-    [GeneratedRegex("([X-Z][01])|([X-Z][0-9]*)")]
+    [GeneratedRegex("([X-Z][01])(?=[X-Z])|([X-Z][0-9]+)")]
     private static partial Regex ParserRegex();
 }
